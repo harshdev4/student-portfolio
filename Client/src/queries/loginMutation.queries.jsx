@@ -16,7 +16,7 @@ const useLoginMutation = () => {
         onSuccess: (data) => {
             toast.success("User Authentication successful");
             queryClient.invalidateQueries(['user']);
-            navigate(`/profile/${data.token}`);
+            navigate(`/profile/${data.userId}`);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong. Please try again.");

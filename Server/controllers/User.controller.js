@@ -4,34 +4,34 @@ import jwt from 'jsonwebtoken';
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 
 export const auth = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-        const user = await User.findOne({ email });
-        if (user) {
-            const isValidPass = await bcrypt.compare(password, user.password);
-            if (isValidPass) {
-                const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-                res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: 'lax'});
-                return res.status(200).json({ token });
-            }
-
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        const encryptedPass = await bcrypt.hash(password, 10);
-
-        const newUser = await User.create({ email, password: encryptedPass });
-        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax"});
-        return res.status(201).json({ token });
-
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+    const user = await User.findOne({ email });
+    if (user) {
+      const isValidPass = await bcrypt.compare(password, user.password);
+      if (isValidPass) {
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: 'lax' });
+        return res.status(200).json({ token });
+      }
+
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const encryptedPass = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({ email, password: encryptedPass });
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax" });
+    return res.status(201).json({ userId: user._id });
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
 export const createProfile = async (req, res) => {
@@ -135,54 +135,54 @@ export const createProfile = async (req, res) => {
 
 
 export const searchProfile = async (req, res) => {
-    try {
-        const { name } = req.query;
-        const regex = new RegExp(name, 'i');
-        const students = await User.find({ name: regex });
-        return res.status(200).json({ students, message: "Operations Successful" });
-    } catch (error) {
-        console.log(error);
+  try {
+    const { name } = req.query;
+    const regex = new RegExp(name, 'i');
+    const students = await User.find({ name: regex });
+    return res.status(200).json({ students, message: "Operations Successful" });
+  } catch (error) {
+    console.log(error);
 
-        return res.status(500).json({ message: "Something went wrong" });
-    }
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 }
 
 
 export const getProfile = async (req, res) => {
-    try {
-        const { id: userId } = req.params;
-        const user = await User.findById(userId).select("-password");
+  try {
+    const { id: userId } = req.params;
+    const user = await User.findById(userId).select("-password");
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-            });
-        }
-        
-
-        res.status(200).json({
-            success: true,
-            message: "Profile fetched successfully",
-            profile: user,
-        });
-    } catch (error) {
-        console.error("Get Profile Error:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error fetching profile",
-            error: error.message,
-        });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
+
+
+    res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully",
+      profile: user,
+    });
+  } catch (error) {
+    console.error("Get Profile Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching profile",
+      error: error.message,
+    });
+  }
 };
 
- 
+
 export const logout = async (req, res) => {
-    try {
-        res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax"});
-        return res.status(200).json({ message: "Logged out successfully" });
-    } catch (error) {
-        console.error('Logout error:', error.message);
-        return res.status(500).json({ message: 'Something went wrong while logging out' });
-    }
+  try {
+    res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax" });
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error('Logout error:', error.message);
+    return res.status(500).json({ message: 'Something went wrong while logging out' });
+  }
 }
