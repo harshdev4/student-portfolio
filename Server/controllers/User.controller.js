@@ -16,7 +16,7 @@ export const auth = async (req, res) => {
       if (isValidPass) {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: 'lax' });
-        return res.status(200).json({ token });
+        return res.status(200).json({ user: user._id });
       }
 
       return res.status(401).json({ message: "Invalid credentials" });
@@ -27,7 +27,7 @@ export const auth = async (req, res) => {
     const newUser = await User.create({ email, password: encryptedPass });
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax" });
-    return res.status(201).json({ userId: user._id });
+    return res.status(201).json({ userId: newUser._id });
 
   } catch (error) {
     return res.status(500).json({ message: error.message });
