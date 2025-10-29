@@ -145,7 +145,7 @@ const CreateProfile = () => {
 
     formData.append("achievements", JSON.stringify(achievements));
 
-    if (projects[0].projectImage || projects[0].projectTitle || projects[0].projectLink) {
+    if (projects[0]?.projectImage || projects[0]?.projectTitle || projects[0]?.projectLink) {
       projects.forEach((project, index) => {
         formData.append(`projects[${index}][projectTitle]`, project.projectTitle);
         formData.append(`projects[${index}][projectLink]`, project.projectLink);
@@ -159,17 +159,6 @@ const CreateProfile = () => {
     createProfile(formData, {
       onSuccess: (data) => {
         toast.success("Profile Created Successfully");
-        setFormState({
-          preview: "",
-          profile: "",
-          name: "",
-          about: "",
-          college: "",
-          phone: "",
-          email: ""
-        });
-
-        setProjects([{ _id: Date.now(), projectImage: "", file: "", projectTitle: "", projectLink: "" }]);
         setAchievements([""]);
         console.log(user.userId);
         queryClient.refetchQueries({
