@@ -13,31 +13,23 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve();
 
 // CORS only in dev
-if (process.env.NODE_ENV === 'development') {
-  app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  }));
-}
+app.use(cors({
+  origin: 'https://student-digital-portfolio.onrender.com',
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
 
-// ✅ Serve frontend in production
-if (process.env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, '../Client/dist');
-  app.use(express.static(distPath));
-
-  // 👇 Catch-all route for React
-  app.use((req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
-}
+app.use(express.static(path.join(__dirname, "/Client/dist")));
+app.get("*", (_, res)=> {
+  res.sendFile(path.resolve(__dirname, "/Client", "dist", "index.html"));
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

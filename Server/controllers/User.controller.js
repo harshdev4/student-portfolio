@@ -176,7 +176,7 @@ export const getProfile = async (req, res) => {
     }
 };
 
-
+ 
 export const logout = async (req, res) => {
     try {
         res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax"});
