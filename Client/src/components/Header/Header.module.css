@@ -1,0 +1,144 @@
+.headerContainer {
+    position: relative;
+    background: var(--header-bg);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 35px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.247);
+}
+
+.headerHeading {
+    font-size: 1.6rem;
+    color: var(--heading-header-color);
+}
+
+.headerHeadingLink {
+    text-decoration: none;
+    color: inherit;
+}
+
+.navUl {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    gap: 2.5rem;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.navLi{
+    transition: transform 0.2s ease-in-out;
+}
+
+.navLi:hover{
+    transform: scale(1.15);
+}
+
+.navLink {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.headerButtonContainer {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.headerButton {
+    font-size: 1.45rem;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    color: inherit;
+}
+
+.mobileHeader {
+    display: none;
+}
+
+@media (max-width: 730px) {
+    .desktopHeader {
+        display: none;
+    }
+
+    .mobileHeader {
+        display: block;
+    }
+
+    .headerHeading {
+        font-size: 1.2rem;
+    }
+
+    .headerButtonMobile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1.2rem;
+        background-color: transparent;
+        border: 0;
+        outline: 0;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    .closeMenu {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .slidingMenu {
+        z-index: 10;
+        position: fixed;
+        background-color: var(--bg-color);
+        top: 0;
+        right: 0;
+        width: 60%;
+        height: 100vh;
+        padding: 50px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        text-align: left;
+        transform: translateX(100%);
+        transition: transform 0.5s ease-in-out;
+        box-shadow: 0 10px 5px rgba(0, 0, 0, 0.377);
+    }
+
+    .slidingMenuOpen {
+        transform: translateX(0%);
+    }
+
+    .navUlMobile {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        justify-content: space-between;
+        gap: 2.5rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .navLiMobile > .navLink > span{
+        font-size: 1.1rem;
+    }
+
+    .headerButtonContainerMobile {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .headerButtonMobile > span{
+        font-size: 1.1rem;
+    }
+
+}
