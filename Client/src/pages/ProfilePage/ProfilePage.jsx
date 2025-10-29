@@ -10,13 +10,11 @@ const ProfilePage = () => {
   const userId = useParams().id;
 
   const { data, isFetching, isError } = useFetchProfileQuery(userId, { enabled: !!userId });
-
-  console.log(data?.achievements.length);
   
 
   if (isFetching) return <Loader />;
 
-  if (!data.name)  
+  if (!data?.name)  
     return (
       <div className={styles.createProfileButtonContainer}>
         <Link to="/create-profile" className={styles.createProfileButton}>
@@ -30,19 +28,19 @@ const ProfilePage = () => {
       <title>Profile - Student Portfolio</title>
 
       <div className={styles.profileCard}>
-        {data.name && <div className={styles.profileHeader}>
+        {data?.name && <div className={styles.profileHeader}>
           <div className={styles.profileImageContainer}>
-            {data.profile ? <img src={data.profile} alt="Profile" className={styles.profileImage} />
-              : <div className={styles.textProfileIconContainer}> <ProfileImage name={data.name} width={'200px'}></ProfileImage></div>
+            {data?.profile ? <img src={data?.profile} alt="Profile" className={styles.profileImage} />
+              : <div className={styles.textProfileIconContainer}> <ProfileImage name={data?.name} width={'200px'}></ProfileImage></div>
             }
           </div>
           <div className={styles.profileInfo}>
-            <h1 className={styles.profileName}>{data.name}</h1>
+            <h1 className={styles.profileName}>{data?.name}</h1>
             <p className={styles.about}>{data.about}</p>
           </div>
         </div>}
 
-        {data.college && <div className={styles.collegeContainer}>
+        {data?.college && <div className={styles.collegeContainer}>
           <h2 className={styles.profilePageHeading}>Education</h2>
           <p className={styles.collegeName}>College: <span>{data.college}</span></p>
         </div>}
