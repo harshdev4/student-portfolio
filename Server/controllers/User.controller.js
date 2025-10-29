@@ -15,7 +15,7 @@ export const auth = async (req, res) => {
             const isValidPass = await bcrypt.compare(password, user.password);
             if (isValidPass) {
                 const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-                res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: process.env.NODE_ENV === "production" ? "strict" : "Lax"});
+                res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: 'lax'});
                 return res.status(200).json({ token });
             }
 
@@ -26,7 +26,7 @@ export const auth = async (req, res) => {
 
         const newUser = await User.create({ email, password: encryptedPass });
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: process.env.NODE_ENV === "production" ? "strict" : "Lax"});
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax"});
         return res.status(201).json({ token });
 
     } catch (error) {
@@ -179,7 +179,7 @@ export const getProfile = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: process.env.NODE_ENV === "production" ? "strict" : "Lax"});
+        res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 3600000, sameSite: "lax"});
         return res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.error('Logout error:', error.message);
