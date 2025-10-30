@@ -74,7 +74,7 @@ const CreateProfile = () => {
     if (e.target.value == "") {
       return setSuggestionsSkills([]);
     }
-    let skillArr = totalSkills.filter((skill) => skill.name.toLowerCase().includes(e.target.value.trim()));
+    let skillArr = totalSkills.filter((skill) => skill.name.toLowerCase().includes(e.target.value.toLowerCase().trim()));
     skillArr = skillArr.filter(skill => !skills.some((selected)=> selected.name === skill.name));
     setSuggestionsSkills(skillArr);
   }
