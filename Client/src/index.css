@@ -42,3 +42,7 @@ body{
   color: var(--text-color);
   transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
 }
+
+.devicon-nextjs-original-wordmark.colored , .devicon-github-original.colored{
+  color: #444 !important;
+}
