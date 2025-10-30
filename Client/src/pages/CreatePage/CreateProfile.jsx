@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import Loader from "../../components/Loader/Loader";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetchProfileQuery from "../../queries/fetchProfile.queries";
+import { totalSkills } from "../../utils/skills";
+import { IoIosCloseCircle } from "react-icons/io";
 
 const CreateProfile = () => {
   // ---------- Refs ----------
@@ -17,6 +19,9 @@ const CreateProfile = () => {
   // ---------- State ----------
   const [projects, setProjects] = useState([{ _id: Date.now(), projectImage: "", file: "", projectTitle: "", projectLink: "" }]);
   const [achievements, setAchievements] = useState([""]);
+  const [skills, setSkills] = useState([]);
+  const [suggestionSkills, setSuggestionsSkills] = useState([]);
+  const skillInputRef = useRef(null);
   const [formState, setFormState] = useState({
     preview: "",
     profile: "",
@@ -46,6 +51,8 @@ const CreateProfile = () => {
       email: data?.email || ""
     });
 
+    setSkills(data?.skills || []);
+
     setAchievements(data?.achievements || [""]);
 
     setProjects(data?.projects || [{ _id: Date.now(), projectImage: "", file: "", projectTitle: "", projectLink: "" }])
@@ -59,6 +66,27 @@ const CreateProfile = () => {
   // ---------- Form Input Handlers -------
   const handleFormInput = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
+  }
+
+  // skill input handler
+
+  const handleSkillInput = (e) => {
+    if (e.target.value == "") {
+      return setSuggestionsSkills([]);
+    }
+    let skillArr = totalSkills.filter((skill) => skill.name.toLowerCase().includes(e.target.value.trim()));
+    skillArr = skillArr.filter(skill => !skills.some((selected)=> selected.name === skill.name));
+    setSuggestionsSkills(skillArr);
+  }
+
+  const handleSuggestionClick = (suggestedSkill) => {
+    setSkills((prev) => [...prev, suggestedSkill])
+    setSuggestionsSkills([]);
+    skillInputRef.current.value = "";
+  }
+
+  const handleRemoveInputSkill = (index) => {
+    setSkills((prev)=> prev.filter((_, i) => i != index));
   }
 
   // ---------- Profile Handlers ----------
@@ -139,6 +167,9 @@ const CreateProfile = () => {
     formData.append("college", formState.college);
     formData.append("phone", formState.phone);
     formData.append("email", formState.email);
+    if (skills.length > 0) {
+      formData.append("skills", JSON.stringify(skills));
+    }
     if (formState.profile) {
       formData.append("profile", formState.profile);
     }
@@ -216,6 +247,35 @@ const CreateProfile = () => {
 
             <label className={styles.inputLabel} htmlFor="mail">Email</label>
             <input id="mail" name="email" type="email" value={formState.email} className={`${styles.studyAndContactInput} ${styles.formInput}`} placeholder="yourmail@student.com" autoComplete="off" onChange={handleFormInput} />
+          </div>
+
+          {/* skills */}
+          <div className={styles.skillsDiv}>
+            <div className={styles.skillHeaderDiv}>
+              <h3 className={`${styles.sectionHeading} ${styles.skillHeading}`}>Your Skills</h3>
+              {
+                skills.length > 0 && <div className={styles.inputSkillsContainer}>
+                  {
+                    skills.map((skill, index) => (
+                      <div key={index} className={styles.inputSkillDiv}>
+                        <span className={styles.inputSkill}>{skill.name}</span>
+                        <IoIosCloseCircle className={styles.inputSkillRemove} onClick={()=> handleRemoveInputSkill(index)}/>
+                      </div>
+                    ))
+                  }
+                </div>
+              }
+            </div>
+            <input ref={skillInputRef} name="skill" type="text" className={`${styles.skillInput} ${styles.formInput}`} placeholder="Java..." autoComplete="off" onChange={(e) => handleSkillInput(e)} />
+            {
+              suggestionSkills.length > 0 && <div className={styles.skillSuggestionWindow}>
+                {
+                  suggestionSkills.map((suggestedSkill, index) => (
+                    <div key={index} className={styles.suggestedSkill} onClick={() => handleSuggestionClick(suggestedSkill)}>{suggestedSkill.name}</div>
+                  ))
+                }
+              </div>
+            }
           </div>
 
           {/* Achievements */}

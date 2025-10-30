@@ -122,6 +122,56 @@
     font-weight: 400;
 }
 
+.skillsDiv{
+    margin-top: 15px;
+}
+
+.skillHeading{
+    margin-bottom: 8px;
+}
+
+.inputSkillsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+}
+
+.inputSkillDiv{
+    position: relative;
+    padding: 10px 14px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 25px;
+}
+
+.inputSkill{
+    font-size: 1rem;
+}
+
+.inputSkillRemove{
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.skillSuggestionWindow{
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.suggestedSkill{
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestedSkill:hover{
+    background-color: var(--secondary-color);
+}
+
 .achievementsDiv,
 .projectsDiv {
     margin: 25px 0;

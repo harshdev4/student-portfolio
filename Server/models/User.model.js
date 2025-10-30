@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        skills: {
+            type: [{
+                name: String,
+                class: String
+            }],
+            default: []
+        },
         achievements: {
             type: [String],
             default: [],

@@ -86,9 +86,39 @@
     margin: 0.3rem 0;
 }
 
+.skillsContainerDiv{
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.skillHeading{
+    color: var(--heading-header-color);
+}
+
+.skills{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 45px;
+    padding: 1.5rem 0;
+}
+
+.skill{
+    font-size: 44px;
+    border: 1px solid;
+    padding: 20px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.skill:hover{
+    transform: scale(1.1);
+}
+
 .achievementsSection {
     width: 100%;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .achievementsSection h2 {
@@ -193,5 +223,9 @@
 @media(max-width:599px) {
     .projectGrid {
         grid-template-columns: 100%;
+    }
+
+    .skill{
+        font-size: 30px;
     }
 }

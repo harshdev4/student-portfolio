@@ -42,6 +42,7 @@ export const createProfile = async (req, res) => {
       return res.status(401).json({ message: "Name is required" });
     }
 
+    const skills = JSON.parse(req.body.skills || "[]");
     const achievements = JSON.parse(req.body.achievements || "[]");
 
     // Get existing user
@@ -112,6 +113,7 @@ export const createProfile = async (req, res) => {
     user.college = college;
     user.phone = phone;
     user.email = email;
+    user.skills = skills;
     user.achievements = achievements;
     user.projects = projects;
 
