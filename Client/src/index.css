@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-color: #f0f0f0;
+  --text-color: #222222;
+  --heading-header-color: #252550;
+  --header-bg: #f3f3f3;
+  --input-border: rgb(131, 131, 131);
+  --danger-color: #c93939;
+  --save-btn-bg: #071124;
+  --browse-file-bg: #000000;
+  --secondary-color: #919090;
+  --profileAbout: #5c5c5c;
+  --profileBg: #2b224d;
+  --profileText: #906bff;
+}
+
+[data-theme='dark'] {
+  --bg-color: #071124;
+  --text-color: #f5f5f5;
+  --heading-header-color: #ffffff;
+  --header-bg: #040b18;
+  --input-border: #2e3035;
+  --danger-color: #b40f0f;
+  --save-btn-bg: #0288a0;
+  --browse-file-bg: #ffffff;
+  --secondary-color: #333333;
+  --profileAbout: #9b9b9b;
+  --profileBg: #906bff;
+  --profileText: #2b224d;
+}
+
+body{
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+.devicon-nextjs-original-wordmark.colored , .devicon-github-original.colored{
+  color: #444 !important;
+}
