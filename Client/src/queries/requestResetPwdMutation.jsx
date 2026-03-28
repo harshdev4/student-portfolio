@@ -5,6 +5,7 @@ import axiosInstance from '../utils/axiosInstance.utils';
 import { useNavigate } from 'react-router-dom';
 
 const requestResetPwdMutation = () => {
+    const navigate = useNavigate();
     return useMutation({
         mutationFn: async (payload) => {
             const res = await axiosInstance.post('/request-reset-pwd', payload);
@@ -12,6 +13,9 @@ const requestResetPwdMutation = () => {
         },
         onSuccess: (data) => {
             toast.success("Email sent!, please check your inbox");
+            setTimeout(() => {
+                navigate(`/login`);
+            }, 2000);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong. Please try again.");
