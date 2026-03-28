@@ -2,14 +2,18 @@ import User from '../models/User.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
+import sendResetPwdMail from '../utils/sendResetPwdMail.js';
 
 export const auth = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password.trim()) {
       return res.status(400).json({ message: "All fields are required" });
     }
+
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+
     const user = await User.findOne({ email });
     if (user) {
       const isValidPass = await bcrypt.compare(password, user.password);
@@ -22,6 +26,10 @@ export const auth = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    if (!strongPasswordRegex.test(password)) {
+      return res.status(400).json({ message: "Password is weak" });
+    }
+
     const encryptedPass = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({ email, password: encryptedPass });
@@ -32,6 +40,47 @@ export const auth = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
+};
+
+export const requestResetPwd = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (user) {
+    try {
+      await sendResetPwdMail(user._id, email);
+      return res.status(201).json({ message: "Mail sent successfully" });
+    } catch (error) {
+      // console.log(error);
+
+      return res.status(501).json({ error, message: "Something went wrong while sending mail" });
+    }
+  }
+
+  return res.status(404).json({ message: "User not found" });
+};
+
+export const resetPwd = async (req, res) => {
+  const { id, password } = req.body;
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+
+  if (!strongPasswordRegex.test(password)) {
+    return res.status(400).json({ message: "Password is weak" });
+  }
+  const user = await User.findById(id);
+  if (user) {
+    const encryptedPass = await bcrypt.hash(password, 10);
+    try {
+      user.password = encryptedPass;
+      await user.save();
+      return res.status(201).json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(501).json({ error, message: "Something went wrong while updating mail" });
+    }
+  }
+
+  return res.status(404).json({ message: "User not found" });
 };
 
 export const createProfile = async (req, res) => {
@@ -133,8 +182,6 @@ export const createProfile = async (req, res) => {
     });
   }
 };
-
-
 
 export const searchProfile = async (req, res) => {
   try {

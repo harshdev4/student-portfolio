@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage/LoginPage.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import RedirectToProfile from './components/Redirect.jsx';
+import ResetPwdPage from './pages/ResetPwdPage/ResetPwdPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'search',
         element: <SearchPage />
+      },
+      {
+        path: 'request-reset-pwd/:id',
+        element: <ResetPwdPage/>
       }
     ]
   }

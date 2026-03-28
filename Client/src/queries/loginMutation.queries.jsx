@@ -16,7 +16,6 @@ const useLoginMutation = () => {
         onSuccess: (data) => {
             toast.success("User Authentication successful");
             queryClient.invalidateQueries(['user']);
-            console.log(data);
             navigate(`/profile/${data.userId}`);
         },
         onError: (error) => {

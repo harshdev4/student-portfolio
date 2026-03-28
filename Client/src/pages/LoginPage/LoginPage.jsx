@@ -5,17 +5,19 @@ import { useTheme } from "../../context/ThemeContext";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance.utils";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useLoginMutation from "../../queries/loginMutation.queries";
 import useAuthQuery from "../../queries/checkAuth.queries";
-
+import requestResetPwdMutation from "../../queries/requestResetPwdMutation";
+import Loader from "../../components/Loader/Loader";
 const LoginPage = () => {
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
-    const {mutate, isPending} = useLoginMutation();
-    const {user} = useAuthQuery();
+    const { mutate, isPending } = useLoginMutation();
+    const { mutate:pwdMutate, isPending : pwdPending} = requestResetPwdMutation();
+    const { user } = useAuthQuery();
 
     if (user) {
         navigate('/');
@@ -28,10 +30,16 @@ const LoginPage = () => {
 
     const togglePassword = () => setShowPassword((s) => !s);
 
+    const handleForgetPwd = () => {
+        if (!form.email) return toast.error("Please enter your email.");
+        const payload = {email : form.email};
+        pwdMutate(payload);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!form.email) return toast.error("Please enter your email.");
-        if (!form.password) return toast.error("Please enter your password.");
+        if (!form.password.trim()) return toast.error("Please enter your password.");
 
         const payload = { email: form.email.trim(), password: form.password };
 
@@ -45,6 +53,7 @@ const LoginPage = () => {
             <title>Sign In - Student Portfolio</title>
             <button className={styles.headerButton} title='Toggle Theme' onClick={toggleTheme}>{theme === 'light' ? <MdDarkMode /> : <MdLightMode />}</button>
             <div className={styles.loginContainer}>
+                {pwdPending && <Loader/>}
                 <h2 className={styles.heading}>Student Portfolio — Sign In</h2>
                 <div className={styles.loginCardDiv}>
                     <img src="/images/login.jpg" alt="login - student portfolio" className={styles.loginImage} />
@@ -81,7 +90,7 @@ const LoginPage = () => {
                         </div>
 
                         <button type="submit" disabled={isPending} className={`${styles.button} ${styles.saveButton} ${styles.fullWidth}`}>{isPending ? "Signing In" : "Sign In"}</button>
-
+                        <button type="reset" className={`${styles.forgetLink} ${styles.fullWidth}`} onClick={handleForgetPwd}>Forgot Password?</button>
                     </form>
                 </div>
             </div>

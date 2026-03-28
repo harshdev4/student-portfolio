@@ -1,0 +1,93 @@
+.resetPwdPage {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.heading {
+    margin: 30px 0;
+    font-weight: 500;
+}
+
+.pwdRequirement {
+    font-size: 0.7rem;
+    color: var(--profileAbout);
+    margin-bottom: 20px;
+}
+
+.formInput {
+    padding: 10px;
+    border: 1px solid var(--input-border);
+    outline: 0;
+    border-radius: 8px;
+    background: transparent;
+    font-weight: 400;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 20px;
+    color: inherit;
+}
+
+.loginInput {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+.passwordInput {
+    padding-right: 42px;
+    margin-bottom: 0;
+}
+
+.eyeButton {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    color: inherit;
+}
+
+.pwdMatch {
+    border: 2px solid #22c55e;
+    outline: none;
+    box-shadow: 0 0 2px 2px rgba(34, 197, 94, 0.616);
+}
+
+.pwdNotMatch {
+    border: 2px solid #d83939;
+    outline: none;
+    box-shadow: 0 0 3px 2px #d8393980;
+}
+
+.button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background-color: var(--browse-file-bg);
+    color: var(--bg-color);
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.saveButton {
+    background-color: var(--save-btn-bg);
+    color: var(--bg-color);
+    margin-bottom: 12px;
+}

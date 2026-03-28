@@ -27,7 +27,7 @@ const useAuthQuery = () => {
     });
 
     useEffect(() => {        
-        if (isError) {
+        if (isError && !location.pathname.includes("request-reset-pwd")) {
             navigate('/login');
         }
     }, [isError, error, navigate]);

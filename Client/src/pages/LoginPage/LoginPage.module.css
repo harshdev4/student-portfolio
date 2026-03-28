@@ -123,6 +123,20 @@
     margin-bottom: 12px;
 }
 
+.forgetLink{
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: 1px solid;
+    border-radius: 12px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+}
+
 @media (max-width: 480px) {
     .loginCardDiv{
         width: 100%;

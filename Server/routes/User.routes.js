@@ -1,5 +1,5 @@
 import express from 'express';
-import { auth, createProfile, getProfile, logout, searchProfile } from '../controllers/User.controller.js';
+import { auth, createProfile, getProfile, logout, requestResetPwd, resetPwd, searchProfile } from '../controllers/User.controller.js';
 import checkAuth from '../middleware/Auth.middleware.js';
 import upload from '../middleware/multer.middleware.js';
 
@@ -13,5 +13,7 @@ router.get('/checkAuth', checkAuth, (req, res)=>{
 router.post('/create-profile', upload.any(), checkAuth, createProfile);
 router.get("/profile/:id", getProfile);
 router.get("/search", searchProfile);
+router.post("/request-reset-pwd", requestResetPwd);
+router.post("/reset-pwd", resetPwd);
 
 export default router;
