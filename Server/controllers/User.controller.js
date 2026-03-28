@@ -51,7 +51,7 @@ export const requestResetPwd = async (req, res) => {
       await sendResetPwdMail(user._id, email);
       return res.status(201).json({ message: "Mail sent successfully" });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
 
       return res.status(501).json({ error, message: "Something went wrong while sending mail" });
     }
