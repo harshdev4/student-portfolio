@@ -2,9 +2,6 @@ import mjml from 'mjml';
 import transporter from '../config/nodemailer.config.js';
 
 const sendResetPwdMail = async (id, userMail) => {
-    console.log(process.env.MAIL, process.env.PWD);
-    
-    
     const RESET_LINK = process.env.NODE_ENV === "development"
         ? `http://localhost:5173/request-reset-pwd/${id}`
         : `https://student-digital-portfolio.onrender.com/request-reset-pwd/${id}`;
