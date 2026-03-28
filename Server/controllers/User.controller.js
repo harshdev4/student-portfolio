@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 import sendResetPwdMail from '../utils/sendResetPwdMail.js';
+import { generateResetToken } from '../utils/generateToken.js';
+import crypto from 'crypto';
 
 export const auth = async (req, res) => {
   try {
@@ -48,7 +50,13 @@ export const requestResetPwd = async (req, res) => {
   const user = await User.findOne({ email });
   if (user) {
     try {
-      await sendResetPwdMail(user._id, email);
+      const { rawToken, hashedToken } = generateResetToken();
+
+      user.resetToken = hashedToken;
+      user.resetTokenExpire = Date.now() + 15 * 60 * 1000;
+
+      await user.save();
+      await sendResetPwdMail(rawToken, email);
       return res.status(201).json({ message: "Mail sent successfully" });
     } catch (error) {
       console.log(error);
@@ -61,26 +69,47 @@ export const requestResetPwd = async (req, res) => {
 };
 
 export const resetPwd = async (req, res) => {
-  const { id, password } = req.body;
+  const { password } = req.body;
+
+  if (!req.query.token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+
   const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
 
   if (!strongPasswordRegex.test(password)) {
     return res.status(400).json({ message: "Password is weak" });
   }
-  const user = await User.findById(id);
-  if (user) {
-    const encryptedPass = await bcrypt.hash(password, 10);
-    try {
-      user.password = encryptedPass;
-      await user.save();
-      return res.status(201).json({ message: "Password updated successfully" });
-    } catch (error) {
-      console.log(error);
-      return res.status(501).json({ error, message: "Something went wrong while updating mail" });
-    }
-  }
 
-  return res.status(404).json({ message: "User not found" });
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.query.token)
+    .digest('hex');
+
+  try {
+    const user = await User.findOne({
+      resetToken: hashedToken,
+      resetTokenExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    const encryptedPass = await bcrypt.hash(password, 10);
+
+    user.password = encryptedPass;
+    user.resetToken = undefined;
+    user.resetTokenExpire = undefined;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Something went wrong while updating password" });
+  }
 };
 
 export const createProfile = async (req, res) => {

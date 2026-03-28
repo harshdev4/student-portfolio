@@ -4,8 +4,7 @@ import toast from 'react-hot-toast';
 import axiosInstance from '../utils/axiosInstance.utils';
 import { useNavigate } from 'react-router-dom';
 
-const requestResetPwdMutation = () => {
-    const navigate = useNavigate();
+const useRequestResetPwdMutation = () => {
     return useMutation({
         mutationFn: async (payload) => {
             const res = await axiosInstance.post('/request-reset-pwd', payload);
@@ -13,9 +12,6 @@ const requestResetPwdMutation = () => {
         },
         onSuccess: (data) => {
             toast.success("Email sent!, please check your inbox");
-            setTimeout(() => {
-                navigate(`/login`);
-            }, 2000);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong. Please try again.");
@@ -23,14 +19,18 @@ const requestResetPwdMutation = () => {
     })
 }
 
-export const resetPwdMutation = () => {
+export const useResetPwdMutation = (token) => {
+    const navigate = useNavigate();
     return useMutation({
         mutationFn: async (payload) => {
-            const res = await axiosInstance.post('/reset-pwd', payload);
+            const res = await axiosInstance.post(`/reset-pwd?token=${token}`, payload);
             return res.data;
         },
         onSuccess: (data) => {
             toast.success("Password changed successfully");
+            setTimeout(() => {
+                navigate(`/login`);
+            }, 1200);
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || "Something went wrong. Please try again.");
@@ -38,4 +38,4 @@ export const resetPwdMutation = () => {
     })
 }
 
-export default requestResetPwdMutation;
+export default useRequestResetPwdMutation;

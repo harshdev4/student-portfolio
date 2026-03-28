@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <SearchPage />
       },
       {
-        path: 'request-reset-pwd/:id',
+        path: 'request-reset-pwd',
         element: <ResetPwdPage/>
       }
     ]

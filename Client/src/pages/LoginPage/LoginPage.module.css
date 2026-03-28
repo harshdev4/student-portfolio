@@ -136,7 +136,7 @@
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     background: transparent;
-    color: var(--header-bg);
+    color: var(--save-btn-bg);
 }
 
 @media (max-width: 480px) {

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react'
 import styles from './ResetPwdPage.module.css';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { resetPwdMutation } from '../../queries/requestResetPwdMutation';
+import { useResetPwdMutation } from '../../queries/requestResetPwdMutation';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 
 const ResetPwdPage = () => {
-    const {id} = useParams();
+    const token = new URLSearchParams(location.search).get("token");
     const [showPassword, setShowPassword] = useState(false);
     const [pass, setPass] = useState("");
     const confirmPwdRef = useRef(null);
@@ -29,7 +29,7 @@ const ResetPwdPage = () => {
         }
     }
 
-    const { mutate, isPending } = resetPwdMutation();
+    const { mutate, isPending } = useResetPwdMutation(token);
 
     const togglePassword = () => setShowPassword((s) => !s);
 
@@ -47,7 +47,7 @@ const ResetPwdPage = () => {
             toast.error("Please, enter a password");
             return;
         }
-        const payload = {id, password: pass.trim() };
+        const payload = {password: pass.trim() };
         mutate(payload)
     }
     return (

@@ -8,15 +8,16 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import useLoginMutation from "../../queries/loginMutation.queries";
 import useAuthQuery from "../../queries/checkAuth.queries";
-import requestResetPwdMutation from "../../queries/requestResetPwdMutation";
 import Loader from "../../components/Loader/Loader";
+import useRequestResetPwdMutation from "../../queries/requestResetPwdMutation";
+
 const LoginPage = () => {
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const { mutate, isPending } = useLoginMutation();
-    const { mutate:pwdMutate, isPending : pwdPending} = requestResetPwdMutation();
+    const { mutate:pwdMutate, isPending : pwdPending} = useRequestResetPwdMutation();
     const { user } = useAuthQuery();
 
     if (user) {
