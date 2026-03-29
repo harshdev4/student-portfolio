@@ -2,16 +2,20 @@ import React, { useRef } from 'react'
 import styles from './Header.module.css'
 import { IoPersonSharp, IoMenu, IoClose } from "react-icons/io5";
 import { TbNewSection } from "react-icons/tb";
-import { IoMdLogOut, IoMdSearch } from "react-icons/io";
+import { IoMdLogIn, IoMdLogOut, IoMdSearch } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useTheme } from '../../context/ThemeContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useLogoutQuery from '../../queries/logoutMutation.queries';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Header = () => {
   const slidingMenuRef = useRef(null);
   const {theme, toggleTheme} = useTheme();
-
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData(["user"]);
+  const navigate = useNavigate();
+  
   const toggleMenu = () => {
     if (slidingMenuRef) {
       slidingMenuRef.current.classList.toggle(`${styles.slidingMenuOpen}`);
@@ -37,7 +41,7 @@ const Header = () => {
       </nav>
       <div className={`${styles.headerButtonContainer} ${styles.desktopHeader}`}>
         <button className={styles.headerButton} title='Toggle Theme' onClick={toggleTheme}>{theme === 'light' ? <MdDarkMode /> : <MdLightMode />}</button>
-        <button className={styles.headerButton} title='Logout' onClick={()=> mutate()}><IoMdLogOut /></button>
+        {user?.userId ? <button className={styles.headerButton} title='Logout' onClick={()=> mutate()}><IoMdLogOut /></button> : <button className={styles.headerButton} title='Login' onClick={()=>navigate('/login')}><IoMdLogIn /></button>}
       </div>
 
       {/* mobile view */}
@@ -54,11 +58,10 @@ const Header = () => {
         </nav>
         <div className={`${styles.headerButtonContainerMobile}`}>
           <button className={styles.headerButtonMobile} title='Toggle Theme' onClick={toggleTheme}>{theme === 'light' ? <MdDarkMode /> : <MdLightMode />} <span>Theme</span></button>
-          <button className={styles.headerButtonMobile} title='Logout' onClick={logout}><IoMdLogOut /> <span>Logout</span></button>
+          {user?.userId ? <button className={styles.headerButtonMobile} title='Logout' onClick={logout}><IoMdLogOut /> <span>Logout</span></button> : <button className={styles.headerButtonMobile} title='Login' onClick={()=>navigate('/login')}><IoMdLogIn /> <span>Login</span></button>}
         </div>
       </div>
     </header>
   )
 }
-
 export default Header;
