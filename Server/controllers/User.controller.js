@@ -46,7 +46,6 @@ export const auth = async (req, res) => {
 
 export const requestResetPwd = async (req, res) => {
   const { email } = req.body;
-
   const user = await User.findOne({ email });
   if (user) {
     try {
